@@ -21,6 +21,10 @@ extern "C" {
 
 #define SCROLL_SET_YDELTA(y) (scroll_delta_y -= (y))
 
+#define SCROLL_SET_ABSXDELTA(x) (scroll_delta_x = (x))
+
+#define SCROLL_SET_ABSYDELTA(y) (scroll_delta_y = (y))
+
 #define SCROLL_RESET() (scroll_init())
 
 char scroll_tick;
