@@ -1,0 +1,8 @@
+arcanebolt
+----------
+
+* Includes slightly modified source of arduino-0016 (see Makefile)
+* Move the arduino libary files under `arduino` in the source tree
+* Put images to be uploaded under `images` in the source tree
+
+COPY-IT-RIGHT
