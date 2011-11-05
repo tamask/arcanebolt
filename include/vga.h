@@ -50,6 +50,10 @@ extern "C" {
 
 #define VGA_SET_VSYNC(v) (vga_scanline_stop = (v))
 
+#define VGA_GET_HSYNC() (OCR1A)
+
+#define VGA_GET_VSYNC() (vga_scanline_stop)
+
 #define VGA_SET_TEXEL1D(i, v) (vga_buffer[(i)] = (v))
 
 #define VGA_SET_TEXEL2D(x, y, v) (vga_buffer[(y) * 32 + (x)] = (v))
@@ -64,6 +68,7 @@ extern "C" {
 
 #define VGA_SET_OFFSETY(y) (vga_offset_y = ((y) & 31) * 32)
 
+unsigned long vga_time;
 short int vga_scanline;
 unsigned short int vga_scanline_stop;
 char vga_buffer[VGA_BUFFER_SIZE];

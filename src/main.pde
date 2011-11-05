@@ -5,9 +5,11 @@
 #include "cursor.h"
 #include "scroll.h"
 #include "cycle.h"
+#include "track.h"
 
 #define MODE_BLIT 0
 #define MODE_CYCLE 1
+#define MODE_TRACK 2
 #define MODE_GET() (mode)
 #define MODE_SET(v) (mode = (v))
 
@@ -73,6 +75,9 @@ loop (void)
               break;
             case XT_F2:
               MODE_SET (MODE_CYCLE);
+              break;
+            case XT_F3:
+              MODE_SET (MODE_TRACK);
               break;
 
             case XT_TAB:
@@ -150,6 +155,15 @@ loop (void)
             case XT_Y:
               dump ();
               break;
+            case XT_T:
+              TRACK_TOGGLE ();
+              break;
+            case XT_R:
+              Serial.print ("HSYNC: ");
+              Serial.println (VGA_GET_HSYNC (), DEC);
+              Serial.print ("VSYNC: ");
+              Serial.println (VGA_GET_VSYNC (), DEC);
+              break;
             }
 
           /* context dependent commands */
@@ -161,25 +175,50 @@ loop (void)
                 case MODE_BLIT:
                   BLIT_SET (CURSOR_GET_X (), CURSOR_GET_Y (), e.symbol - 2);
                   break;
+
                 case MODE_CYCLE:
                   CYCLE_ENABLE ();
                   CYCLE_LOAD (e.symbol - 2);
+                  break;
+
+                case MODE_TRACK:
+                  TRACK_LOAD (e.symbol - 2);
                   break;
                 }
             }
         }
     }
 
+  TRACK_UPDATE ();
   FILL_UPDATE ();
   BLIT_UPDATE ();
   CURSOR_UPDATE ();
   SCROLL_UPDATE ();
   CYCLE_UPDATE ();
 
-  input_0 = analogRead (0) >> 1;
-  input_1 = analogRead (1) >> 2;
-  input_2 = analogRead (2) >> 3;
+  if (TRACK_ISENABLED ())
+    {
+      if (!TRACK_CHANNEL_ISENABLED (TRACK_CHANNEL_HSYNC))
+        {
+          input_0 = (analogRead (0) >> 1) + 32;
+          input_2 = analogRead (2) >> 3;
+          VGA_SET_HSYNC (input_0 + input_2);
+        }
+      if (!TRACK_CHANNEL_ISENABLED (TRACK_CHANNEL_VSYNC))
+        {
+          input_1 = analogRead (1) >> 2;
+          /* input_1 = analogRead (1) >> 1; */
+          VGA_SET_VSYNC (input_1);
+        }
+    }
+  else
+    {
+      input_0 = (analogRead (0) >> 1) + 32;
+      input_1 = analogRead (1) >> 2;
+      /* input_1 = analogRead (1) >> 1; */
+      input_2 = analogRead (2) >> 3;
 
-  VGA_SET_HSYNC (input_0 + input_2);
-  VGA_SET_VSYNC (input_1);
+      VGA_SET_HSYNC (input_0 + input_2);
+      VGA_SET_VSYNC (input_1);
+    }
 }

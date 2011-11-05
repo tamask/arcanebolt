@@ -14,6 +14,6 @@ LOCAL_DEPS = ./build/data.o
 
 include Makefile.in
 
-./build/data.o: $(OBJDIR) ./images/0*.png ./cycles/0*.png
-	python ./utils/make_data.py ./utils/palette.gpl ./images/0*.png ./cycles/0*.png > $(OBJDIR)/data.c
+./build/data.o: $(OBJDIR) ./images/0*.png ./cycles/0*.png ./tracks/0*.trk
+	python ./utils/make_data.py ./utils/palette.gpl ./images/0*.png ./cycles/0*.png ./tracks/0*.trk > $(OBJDIR)/data.c
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $(OBJDIR)/data.c -o $(OBJDIR)/data.o

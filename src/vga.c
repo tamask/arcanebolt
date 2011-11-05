@@ -20,6 +20,7 @@ vga_init (void)
   TIMSK1 = 1 << OCIE1A;
   sei();
 
+  vga_time = 0;
   vga_offset_x = 0;
   vga_offset_y = 0;
   vga_scanline = VGA_SCANLINE_START;
@@ -100,4 +101,6 @@ ISR (TIMER1_COMPA_vect)
 
   if (++vga_scanline == vga_scanline_stop)
     vga_scanline = VGA_SCANLINE_START;
+
+  vga_time += 32;
 }
