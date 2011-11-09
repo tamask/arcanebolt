@@ -1,8 +1,9 @@
 # arduino v0016
 # NOTE: arduino/WInterrupts.c:197-200 disabled
 
-ARDUINO_DIR = arduino
+DATA = ./data/default.py
 TARGET = main
+ARDUINO_DIR = arduino
 MCU = atmega328p
 F_CPU = 16000000
 ARDUINO_PORT = /dev/ttyUSB*
@@ -14,6 +15,6 @@ LOCAL_DEPS = ./build/data.o
 
 include Makefile.in
 
-./build/data.o: $(OBJDIR) ./images/0*.png ./cycles/0*.png ./tracks/0*.trk
-	python ./utils/make_data.py ./utils/palette.gpl ./images/0*.png ./cycles/0*.png ./tracks/0*.trk > $(OBJDIR)/data.c
+./build/data.o: $(OBJDIR) $(DATA)
+	python ./utils/databuild.py $(DATA) > $(OBJDIR)/data.c
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $(OBJDIR)/data.c -o $(OBJDIR)/data.o
