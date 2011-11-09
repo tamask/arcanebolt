@@ -12,6 +12,11 @@ class DataBuilder(object):
         self.build_cycles()
         self.build_tracks()
 
+    def dump(self, o):
+        self.dump_images(o)
+        self.dump_cycles(o)
+        self.dump_tracks(o)
+
     def build_palette(self):
         palette = []
         source = self.settings['PALETTE']
@@ -71,6 +76,47 @@ class DataBuilder(object):
                 tracks.append(track)
         self.tracks = tracks
 
+    def dump_images(self, o):
+        image_count = len(self.images)
+        image_sizes = [
+            i['dimensions'] for i in self.images]
+        image_variables = ','.join(['image_%s' % n for n in range(image_count)])
+        image_size_data = ', '.join(['{%s,%s}' % s for s in image_sizes])
+
+        for i, image in enumerate(self.images):
+            o.write('prog_char image_%s[] PROGMEM = "%s";\n' % (i, image['data']))
+        o.write('prog_uint16_t image_size[][2] PROGMEM = {%s};\n' % image_size_data)
+        o.write('const char *image_data[] PROGMEM = {%s};\n' % image_variables)
+        o.write('char image_count = %s;\n' % image_count)
+
+    def dump_cycles(self, o):
+        cycle_data = []
+        total_size = 0
+        cycle_count = len(self.cycles)
+        for cycle in self.cycles:
+            cycle_data.extend(cycle)
+            total_size += 64
+        cycle_str_data = ''.join('\\x%x' % i for i in cycle_data)
+
+        o.write('prog_char cycle_data[] PROGMEM = "%s";\n' % cycle_str_data)
+        o.write('char cycle_count = %s;\n' % cycle_count)
+
+    def dump_tracks(self, o):
+        track_data = []
+        track_sizes = []
+        total_tracks = len(self.tracks)
+        for track in self.tracks:
+            size = len(track)
+            for line in track:
+                track_data.extend(line)
+            track_sizes.append((sum(x[1] for x in track_sizes), size))
+        track_size_data = ','.join(str('{%i,%i}' % i) for i in track_sizes)
+        track_data = ','.join(str(i) for i in track_data)
+
+        o.write('char track_count = %s;\n' % total_tracks)
+        o.write('unsigned short int track_size[][2] = {%s};\n' % track_size_data)
+        o.write('prog_int16_t track_data[] PROGMEM = {%s};\n' % track_data)
+
 def settings_from_manifest_file(path):
     settings = {}
     fp = open(path)
@@ -78,7 +124,7 @@ def settings_from_manifest_file(path):
     eval(compile(source, 'manifest.py', 'exec'), {}, settings)
     return settings
 
-def main(argv):
+def main(argv, out):
     try:
         manifest_file = argv[0]
     except IndexError:
@@ -89,6 +135,7 @@ def main(argv):
         os.chdir(os.path.dirname(os.path.realpath(manifest_file)))
         db = DataBuilder(settings)
         db.build()
+        db.dump(out)
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main(sys.argv[1:], sys.stdout)
