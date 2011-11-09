@@ -89,7 +89,6 @@ def main(argv):
         os.chdir(os.path.dirname(os.path.realpath(manifest_file)))
         db = DataBuilder(settings)
         db.build()
-        print vars(db)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
