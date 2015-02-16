@@ -1,13 +1,22 @@
 #include "effects.h"
 
-void 
-effects_pulse_hsync (char value)
+void
+effects_hsync (char value)
 {
   VGA_SET_HSYNC (VGA_GET_HSYNC () + value * PULSE_AMPLITUDE);
 }
 
 void
-effects_pulse_decay (char mode)
+effects_scroll (char mode)
+{
+  if (mode)
+    SCROLL_ENABLE ();
+  else
+    SCROLL_DISABLE ();
+}
+
+void
+effects_decay (char mode)
 {
   int i;
   char x, y;
@@ -22,16 +31,9 @@ effects_pulse_decay (char mode)
 }
 
 void
-effects_pulse_scroll (char mode)
-{
-  if (mode)
-    {
-    }
-}
-
-void
 effects_init ()
 {
-  pulse_register (PULSE_STREAM_FUNCTION, effects_pulse_hsync);
-  pulse_register (PULSE_EVENT_FUNCTION, effects_pulse_decay);
+  pulse_register (PULSE_STREAM_FUNCTION, effects_hsync);
+  pulse_register (PULSE_EVENT_FUNCTION, effects_scroll);
+  pulse_register (PULSE_EVENT_FUNCTION, effects_decay);
 }

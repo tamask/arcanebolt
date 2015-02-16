@@ -17,7 +17,15 @@ extern "C" {
 
 #define SCROLL_SPEED_FASTEST (0)
 
-#define SCROLL_UPDATE() (scroll_delta_x || scroll_delta_y ? _scroll_update (): 0)
+#define SCROLL_ISENABLED() (scroll_enabled)
+
+#define SCROLL_ENABLE() (scroll_enabled = 1)
+
+#define SCROLL_DISABLE() (scroll_enabled = 0)
+
+#define SCROLL_TOGGLE() (scroll_enabled = !scroll_enabled)
+
+#define SCROLL_UPDATE() (scroll_enabled ? (scroll_delta_x || scroll_delta_y ? _scroll_update (): 0) : 0)
 
 #define SCROLL_SET_SPEED(v) (scroll_speed = (v))
 
@@ -27,6 +35,7 @@ extern "C" {
 
 #define SCROLL_RESET() (scroll_init())
 
+char scroll_enabled;
 char scroll_tick;
 char scroll_speed;
 short int scroll_delta_x;

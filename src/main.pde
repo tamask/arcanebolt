@@ -148,6 +148,9 @@ loop (void)
             case XT_BRACKETLEFT:
               SCROLL_SET_SPEED (SCROLL_SPEED_FASTEST);
               break;
+            case XT_BRACKETRIGHT:
+              SCROLL_TOGGLE ();
+              break;
             case XT_M:
               SCROLL_RESET ();
               break;
