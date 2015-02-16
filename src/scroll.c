@@ -4,7 +4,7 @@ void
 scroll_init (void)
 {
   scroll_tick = 0;
-  scroll_speed = SCROLL_SPEED_MEDIUM;
+  scroll_speed = SCROLL_SPEED_SLOW;
   scroll_delta_x = 0;
   scroll_delta_y = 0;
   scroll_offset_x = 0;

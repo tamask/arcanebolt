@@ -7,11 +7,15 @@
 extern "C" {
 #endif
 
-#define SCROLL_SPEED_SLOW (31)
+#define SCROLL_SPEED_SLOWEST (31)
 
-#define SCROLL_SPEED_MEDIUM (3)
+#define SCROLL_SPEED_SLOW (15)
 
-#define SCROLL_SPEED_FAST (0)
+#define SCROLL_SPEED_MEDIUM (7)
+
+#define SCROLL_SPEED_FAST (3)
+
+#define SCROLL_SPEED_FASTEST (0)
 
 #define SCROLL_UPDATE() (scroll_delta_x || scroll_delta_y ? _scroll_update (): 0)
 

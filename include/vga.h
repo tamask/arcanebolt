@@ -54,6 +54,10 @@ extern "C" {
 
 #define VGA_SET_TEXEL2D(x, y, v) (vga_buffer[(y) * 32 + (x)] = (v))
 
+#define VGA_GET_HSYNC(v) (OCR1A)
+
+#define VGA_GET_VSYNC(v) (vga_scanline_stop)
+
 #define VGA_GET_TEXEL1D(i) (vga_buffer[(i)])
 
 #define VGA_GET_TEXEL2D(x, y) (vga_buffer[(y) * 32 + (x)])

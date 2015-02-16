@@ -5,9 +5,12 @@
 #include "cursor.h"
 #include "scroll.h"
 #include "cycle.h"
+#include "pulse.h"
+#include "effects.h"
 
 #define MODE_BLIT 0
 #define MODE_CYCLE 1
+#define MODE_PULSE 2
 #define MODE_GET() (mode)
 #define MODE_SET(v) (mode = (v))
 
@@ -27,16 +30,19 @@ setup (void)
   cursor_init ();
   scroll_init ();
   cycle_init ();
+  pulse_init ();
+  effects_init ();
 
   MODE_SET (MODE_BLIT);
   VGA_SET_TEXELHEIGHT (VGA_TEXEL_SMALL);
 
-  Serial.begin (9600);
+  /* Serial.begin (9600); */
 }
 
 void
 dump (void)
 {
+  /*
   int i;
   char cursor_state;
 
@@ -47,6 +53,7 @@ dump (void)
     Serial.print (VGA_GET_TEXEL1D (i), BYTE);
   if (cursor_state)
     CURSOR_ENABLE ();
+  */
 }
 
 void
@@ -60,6 +67,9 @@ loop (void)
 
           switch (e.symbol)
             {
+
+            /* reset */
+
             case XT_ESCAPE:
               MODE_SET (MODE_BLIT);
               CURSOR_RESET ();
@@ -68,12 +78,19 @@ loop (void)
               FILL_SET (192);
               break;
 
+            /* set mode */
+
             case XT_F1:
               MODE_SET (MODE_BLIT);
               break;
             case XT_F2:
               MODE_SET (MODE_CYCLE);
               break;
+            case XT_F3:
+              MODE_SET (MODE_PULSE);
+              break;
+
+            /* painting */
 
             case XT_TAB:
               CURSOR_TOGGLE ();
@@ -100,6 +117,8 @@ loop (void)
               CURSOR_CYCLE_COLOR (1);
               break;
 
+            /* scrolling */
+
             case XT_L:
               SCROLL_SET_XDELTA (-1);
               break;
@@ -112,6 +131,9 @@ loop (void)
             case XT_P:
               SCROLL_SET_YDELTA (-1);
               break;
+            case XT_O:
+              SCROLL_SET_SPEED (SCROLL_SPEED_SLOWEST);
+              break;
             case XT_COMMA:
               SCROLL_SET_SPEED (SCROLL_SPEED_SLOW);
               break;
@@ -121,9 +143,14 @@ loop (void)
             case XT_SLASH:
               SCROLL_SET_SPEED (SCROLL_SPEED_FAST);
               break;
+            case XT_BRACKETLEFT:
+              SCROLL_SET_SPEED (SCROLL_SPEED_FASTEST);
+              break;
             case XT_M:
               SCROLL_RESET ();
               break;
+
+            /* color cycling */
 
             case XT_Z:
               CYCLE_DISABLE ();
@@ -140,6 +167,17 @@ loop (void)
               CYCLE_ENABLE ();
               CYCLE_SET_SPEED (CYCLE_SPEED_FAST);
               break;
+
+            /* pulsing */
+
+            case XT_B:
+              PULSE_DISABLE ();
+              break;
+            case XT_N:
+              PULSE_ENABLE ();
+              break;
+
+            /* misc/more painting */
 
             case XT_SPACE:
               CURSOR_TOGGLE_TRAIL ();
@@ -159,27 +197,36 @@ loop (void)
               switch (MODE_GET ())
                 {
                 case MODE_BLIT:
-                  BLIT_SET (CURSOR_GET_X (), CURSOR_GET_Y (), e.symbol - 2);
+                  BLIT_SET
+                    (CURSOR_GET_X (),
+                     CURSOR_GET_Y (), e.symbol - 2);
                   break;
+
                 case MODE_CYCLE:
                   CYCLE_ENABLE ();
                   CYCLE_LOAD (e.symbol - 2);
+                  break;
+
+                case MODE_PULSE:
+                  PULSE_ENABLE ();
+                  PULSE_SET (e.symbol - 2);
                   break;
                 }
             }
         }
     }
 
-  FILL_UPDATE ();
-  BLIT_UPDATE ();
-  CURSOR_UPDATE ();
-  SCROLL_UPDATE ();
-  CYCLE_UPDATE ();
-
   input_0 = analogRead (0) >> 1;
   input_1 = analogRead (1) >> 2;
   input_2 = analogRead (2) >> 3;
 
   VGA_SET_HSYNC (input_0 + input_2);
-  VGA_SET_VSYNC (input_1);
+  VGA_SET_VSYNC (input_1 + pulse_value);
+
+  FILL_UPDATE ();
+  BLIT_UPDATE ();
+  CURSOR_UPDATE ();
+  SCROLL_UPDATE ();
+  CYCLE_UPDATE ();
+  PULSE_UPDATE ();
 }
