@@ -7,6 +7,14 @@ extern "C" {
 
 #define PULSE_PIN (4)
 
+#define PULSE_EVERY 0
+
+#define PULSE_FOURTH 3
+
+#define PULSE_EIGHTH 7
+
+#define PULSE_SIXTEENTH 15
+
 #define PULSE_STREAM_FUNCTION 0
 
 #define PULSE_EVENT_FUNCTION 1
@@ -23,9 +31,13 @@ extern "C" {
 
 #define PULSE_RESET() (pulse_init())
 
-#define PULSE_SET(v) (pulse_current_i = (v) % PULSE_FUNCTION_COUNT)
+#define PULSE_SET_FUNC(v) (pulse_current_i = (v) % PULSE_FUNCTION_COUNT)
+
+#define PULSE_SET_DIV(v) (pulse_div = (v))
 
 char pulse_enabled;
+char pulse_div;
+char pulse_tick;
 char pulse_value;
 char pulse_value_last;
 char pulse_register_i;

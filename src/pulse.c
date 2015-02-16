@@ -6,6 +6,7 @@ pulse_init (void)
   int i;
 
   pulse_enabled = 0;
+  pulse_tick = 0;
   pulse_value = 0;
   pulse_register_i = 0;
   pulse_current_i = 0;
@@ -26,15 +27,18 @@ _pulse_update (void)
   trigger = 0;
   pulse_value = digitalRead (PULSE_PIN);
 
+  if (pulse_value && !pulse_value_last)
+    {
+      trigger = 1;
+      pulse_tick++;
+    }
+  if (!pulse_value && pulse_value_last)
+    trigger = 1;
+
   switch (pulse_modes[pulse_current_i])
     {
     case PULSE_EVENT_FUNCTION:
-      if (pulse_value && !pulse_value_last)
-        trigger = 1;
-      if (!pulse_value && pulse_value_last)
-        trigger = 1;
-
-      if (trigger)
+      if (trigger && (pulse_tick & pulse_div) == 0)
         pulse_funcs[pulse_current_i](pulse_value);
       break;
 

@@ -176,6 +176,22 @@ loop (void)
             case XT_N:
               PULSE_ENABLE ();
               break;
+            case XT_F:
+              PULSE_ENABLE ();
+              PULSE_SET_DIV (PULSE_EVERY);
+              break;
+            case XT_G:
+              PULSE_ENABLE ();
+              PULSE_SET_DIV (PULSE_FOURTH);
+              break;
+            case XT_H:
+              PULSE_ENABLE ();
+              PULSE_SET_DIV (PULSE_EIGHTH);
+              break;
+            case XT_J:
+              PULSE_ENABLE ();
+              PULSE_SET_DIV (PULSE_SIXTEENTH);
+              break;
 
             /* misc/more painting */
 
@@ -209,7 +225,7 @@ loop (void)
 
                 case MODE_PULSE:
                   PULSE_ENABLE ();
-                  PULSE_SET (e.symbol - 2);
+                  PULSE_SET_FUNC (e.symbol - 2);
                   break;
                 }
             }
