@@ -3,7 +3,7 @@
 void 
 effects_pulse_hsync (char value)
 {
-  VGA_SET_HSYNC (VGA_GET_HSYNC () + value * 32);
+  VGA_SET_HSYNC (VGA_GET_HSYNC () + value * PULSE_AMPLITUDE);
 }
 
 void

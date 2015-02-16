@@ -194,6 +194,22 @@ loop (void)
               PULSE_ENABLE ();
               PULSE_SET_DIV (PULSE_SIXTEENTH);
               break;
+            case XT_R:
+              PULSE_ENABLE ();
+              PULSE_SET_AMP (0);
+              break;
+            case XT_T:
+              PULSE_ENABLE ();
+              PULSE_SET_AMPDELTA (-1);
+              break;
+            case XT_Y:
+              PULSE_ENABLE ();
+              PULSE_SET_AMPDELTA (1);
+              break;
+            case XT_U:
+              PULSE_ENABLE ();
+              PULSE_SET_AMP (1);
+              break;
 
             /* misc/more painting */
 
@@ -206,9 +222,11 @@ loop (void)
               else
                 FILL_SET (0);
               break;
-            case XT_Y:
+            /*
+            case XT_U:
               dump ();
               break;
+            */
             }
 
           /* context dependent commands */

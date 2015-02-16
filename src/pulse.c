@@ -9,6 +9,7 @@ pulse_init (void)
   pulse_div = 0;
   pulse_tick = 0;
   pulse_value = 0;
+  pulse_amplitude = 0;
   pulse_register_i = 0;
   pulse_current_i = 0;
 

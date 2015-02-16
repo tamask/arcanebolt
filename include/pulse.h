@@ -21,6 +21,8 @@ extern "C" {
 
 #define PULSE_FUNCTION_COUNT 8
 
+#define PULSE_AMPLITUDE (pulse_amplitude)
+
 #define PULSE_ISENABLED() (pulse_enabled)
 
 #define PULSE_ENABLE() (pulse_enabled = 1)
@@ -35,6 +37,10 @@ extern "C" {
 
 #define PULSE_SET_DIV(v) (pulse_div = (v))
 
+#define PULSE_SET_AMP(v) (pulse_amplitude = (v))
+
+#define PULSE_SET_AMPDELTA(v) (pulse_amplitude += (v))
+
 char pulse_enabled;
 char pulse_div;
 char pulse_tick;
@@ -42,6 +48,7 @@ char pulse_value;
 char pulse_value_last;
 char pulse_register_i;
 int pulse_current_i;
+short pulse_amplitude;
 
 int pulse_modes[PULSE_FUNCTION_COUNT];
 void (*pulse_funcs[PULSE_FUNCTION_COUNT])(char state);
