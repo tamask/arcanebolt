@@ -15,6 +15,8 @@ extern "C" {
 
 #define BLIT_SET(x, y, i) (blit_enabled ? 0 : _blit_set (x, y, i))
 
+#define BLIT_GET() (blit_image_index);
+
 #define BLIT_UPDATE() (blit_enabled ? _blit_update () : 0)
 
 #define BLIT_FINISHED() (~blit_enabled)

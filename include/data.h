@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+#define DATA_IMAGE_COUNT (image_count)
+
+#define DATA_CYCLE_COUNT (cycle_count)
+
 extern char image_count;
 extern char cycle_count;
 extern prog_uint16_t image_size[][2] PROGMEM;

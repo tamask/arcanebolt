@@ -4,6 +4,7 @@
 #include "vga.h"
 #include "blit.h"
 #include "pulse.h"
+#include "cycle.h"
 #include "scroll.h"
 
 #ifdef __cplusplus
