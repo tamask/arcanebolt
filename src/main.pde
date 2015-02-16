@@ -201,7 +201,10 @@ loop (void)
               CURSOR_TOGGLE_TRAIL ();
               break;
             case XT_ENTER:
-              FILL_SET (CURSOR_GET_COLOR ());
+              if (CURSOR_ISENABLED ())
+                FILL_SET (CURSOR_GET_COLOR ());
+              else
+                FILL_SET (0);
               break;
             case XT_Y:
               dump ();
