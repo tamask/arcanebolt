@@ -75,6 +75,8 @@ loop (void)
               CURSOR_RESET ();
               SCROLL_RESET ();
               CYCLE_RESET ();
+              PULSE_RESET ();
+              EFFECTS_RESET ();
               FILL_SET (192);
               break;
 

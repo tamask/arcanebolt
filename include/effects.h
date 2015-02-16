@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+#define EFFECTS_RESET() (effects_init())
+
 void effects_init ();
 
 #ifdef __cplusplus

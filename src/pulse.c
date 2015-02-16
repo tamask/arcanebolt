@@ -6,6 +6,7 @@ pulse_init (void)
   int i;
 
   pulse_enabled = 0;
+  pulse_div = 0;
   pulse_tick = 0;
   pulse_value = 0;
   pulse_register_i = 0;
