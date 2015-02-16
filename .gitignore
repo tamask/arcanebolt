@@ -1,4 +1,4 @@
-images
-build
-tracks
 Makefile.local
+manifest.json
+build
+data/tracks
