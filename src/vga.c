@@ -20,11 +20,13 @@ vga_init (void)
   TIMSK1 = 1 << OCIE1A;
   sei();
 
+  vga_enabled = 1;
   vga_offset_x = 0;
   vga_offset_y = 0;
   vga_scanline = VGA_SCANLINE_START;
   vga_scanline_stop = VGA_SCANLINE_STOP;
   vga_texel_height = VGA_TEXEL_HEIGHT;
+  vga_draw_frame = 1;
 
   for (i = 0; i < VGA_BUFFER_SIZE; i++)
     VGA_SET_TEXEL1D (i, 192); /* set transparent */
@@ -52,52 +54,74 @@ ISR (TIMER1_COMPA_vect)
   VGA_HSYNC_OFF ();
 
   /* left margin */
-  NOP; NOP; NOP; NOP; NOP;
-  NOP; NOP; NOP; NOP; NOP;
+  NOP; NOP;
+  /* NOP; NOP; NOP; NOP; NOP; */
+  /* NOP; NOP; NOP; NOP; NOP; */
 
   if (vga_scanline > -1)
     {
-      /* bitwise multiplication/division/modulo */
-      o = (vga_offset_y + (vga_scanline >> vga_texel_height << 5)) & 1023;
+      if (vga_draw_frame)
+        {
+          /* bitwise multiplication/division/modulo */
+          o = (vga_offset_y + (vga_scanline >> vga_texel_height << 5)) & 1023;
 
-      /* draw 32 elements in the buffer */
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 0) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 1) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 2) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 3) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 4) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 5) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 6) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 7) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 8) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 9) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 10) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 11) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 12) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 13) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 14) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 15) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 16) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 17) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 18) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 19) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 20) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 21) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 22) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 23) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 24) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 25) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 26) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 27) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 28) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 29) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 30) & 31)]);
-      VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 31) & 31)]);
-      VGA_TEXEL_WIDTH;
+          /* draw 32 elements in the buffer */
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 0) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 1) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 2) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 3) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 4) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 5) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 6) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 7) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 8) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 9) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 10) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 11) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 12) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 13) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 14) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 15) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 16) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 17) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 18) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 19) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 20) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 21) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 22) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 23) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 24) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 25) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 26) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 27) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 28) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 29) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 30) & 31)]);
+          VGA_RGB_SET (vga_buffer[o + ((vga_offset_x + 31) & 31)]);
+          VGA_TEXEL_WIDTH;
 
-      VGA_RGB_OFF ();
+          VGA_RGB_OFF ();
+        }
+      else
+        {
+          NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
+
+          VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH;
+          VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH;
+          VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH;
+          VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH;
+          VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH;
+          VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH;
+          VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH;
+          VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH; VGA_TEXEL_WIDTH;
+
+          NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
+        }
     }
 
   if (++vga_scanline == vga_scanline_stop)
-    vga_scanline = VGA_SCANLINE_START;
+    {
+      vga_draw_frame = vga_enabled;
+      vga_scanline = VGA_SCANLINE_START;
+    }
 }

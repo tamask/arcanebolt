@@ -1,6 +1,15 @@
 #include "effects.h"
 
 void
+effects_strobe (char mode)
+{
+  if (mode)
+    VGA_ENABLE ();
+  else
+    VGA_DISABLE ();
+}
+
+void
 effects_hsync (char value)
 {
   VGA_SET_HSYNC (VGA_GET_HSYNC () + value * PULSE_AMPLITUDE);
@@ -47,6 +56,7 @@ effects_randomblit (char mode)
 void
 effects_init ()
 {
+  pulse_register (PULSE_EVENT_FUNCTION, effects_strobe);
   pulse_register (PULSE_STREAM_FUNCTION, effects_hsync);
   pulse_register (PULSE_EVENT_FUNCTION, effects_scroll);
   pulse_register (PULSE_EVENT_FUNCTION, effects_cycle);

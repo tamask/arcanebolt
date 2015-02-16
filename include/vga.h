@@ -34,6 +34,14 @@ extern "C" {
 
 #define VGA_TEXEL_WIDTH NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
 
+#define VGA_ISENABLED() (vga_enabled)
+
+#define VGA_ENABLE() (vga_enabled = 1)
+
+#define VGA_DISABLE() (vga_enabled = 0)
+
+#define VGA_TOGGLE() (vga_enabled = !vga_enabled)
+
 #define VGA_RGB_OFF() (PORTB = 0)
 
 #define VGA_RGB_SET(v) (PORTB = (v))
@@ -68,6 +76,8 @@ extern "C" {
 
 #define VGA_SET_OFFSETY(y) (vga_offset_y = ((y) & 31) * 32)
 
+char vga_enabled;
+char vga_draw_frame;
 short int vga_scanline;
 unsigned short int vga_scanline_stop;
 char vga_buffer[VGA_BUFFER_SIZE];
