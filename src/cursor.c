@@ -37,10 +37,14 @@ _cursor_update (void)
       cursor_y = cursor_target_y;
       cursor_buffer = VGA_GET_TEXEL2D (cursor_x, cursor_y);
     }
+
   if (cursor_counter == 0)
     VGA_SET_TEXEL2D (cursor_x, cursor_y, 0);
   else if (cursor_counter == 20)
     VGA_SET_TEXEL2D (cursor_x, cursor_y, PALETTE_COLOR (cursor_color));
+
   if (cursor_counter++ > 40)
     cursor_counter = 0;
+
+  return 0;
 }
