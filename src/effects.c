@@ -41,15 +41,15 @@ effects_randomblit (char mode)
 
   if (mode)
     {
-      i = PULSE_AMPLITUDE;
-      if (i < 0)
-        i = DATA_IMAGE_COUNT - abs(i) % DATA_IMAGE_COUNT;
-      i %= DATA_IMAGE_COUNT;
+      i = INPUT_GET_INTEGER ();
 
-      x = (char)(random () % 32);
-      y = (char)(random () % 32);
+      if (i > -1 && i < DATA_IMAGE_COUNT)
+        {
+          x = (char)(random () % 32);
+          y = (char)(random () % 32);
 
-      BLIT_SET (x, y, i);
+          BLIT_SET (x, y, i);
+        }
     }
 }
 

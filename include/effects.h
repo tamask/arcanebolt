@@ -6,6 +6,7 @@
 #include "pulse.h"
 #include "cycle.h"
 #include "scroll.h"
+#include "input.h"
 
 #ifdef __cplusplus
 extern "C" {

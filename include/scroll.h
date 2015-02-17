@@ -35,6 +35,8 @@ extern "C" {
 
 #define SCROLL_RESET() (scroll_init())
 
+#define SCROLL_CLEAR() (scroll_clear())
+
 char scroll_enabled;
 char scroll_tick;
 char scroll_speed;
@@ -44,6 +46,8 @@ short int scroll_offset_x;
 short int scroll_offset_y;
 
 void scroll_init (void);
+
+void scroll_clear (void);
 
 int _scroll_update (void);
 

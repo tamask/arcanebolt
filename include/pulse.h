@@ -9,6 +9,8 @@ extern "C" {
 
 #define PULSE_EVERY 0
 
+#define PULSE_SECONDTH 1
+
 #define PULSE_FOURTH 3
 
 #define PULSE_EIGHTH 7
@@ -33,7 +35,7 @@ extern "C" {
 
 #define PULSE_RESET() (pulse_init())
 
-#define PULSE_SET_FUNC(v) (pulse_current_i = (v) % PULSE_FUNCTION_COUNT)
+#define PULSE_SET_FUNC(v) (pulse_current_i = ((v) % PULSE_FUNCTION_COUNT))
 
 #define PULSE_SET_DIV(v) (pulse_div = (v))
 

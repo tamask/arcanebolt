@@ -17,6 +17,10 @@ _blit_set (char x, char y, char i)
       blit_x = x;
       blit_y = y;
 
+      if (i < 0)
+        i = 0;
+      i %= DATA_IMAGE_COUNT;
+
       blit_image_index = i;
       blit_image_line = 0;
       blit_image_width = pgm_read_word (&(image_size[i][0]));
