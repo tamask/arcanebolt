@@ -8,7 +8,8 @@ extern "C" {
 #define PALETTE_COLOR(v) (palette_colors[(v)])
 
 #define PALETTE_BLACK 0
-#define PALETTE_WHITE 26
+#define PALETTE_WHITE 63
+#define PALETTE_GREY 21
 #define PALETTE_CLEAR 27
 
 extern const char *palette_colors;

@@ -76,6 +76,8 @@ extern "C" {
 
 #define VGA_SET_OFFSETY(y) (vga_offset_y = ((y) & 31) * 32)
 
+#define VGA_CLEAR() (memset (vga_buffer, 0, VGA_BUFFER_SIZE))
+
 char vga_enabled;
 char vga_draw_frame;
 short int vga_scanline;

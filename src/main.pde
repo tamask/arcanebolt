@@ -8,6 +8,7 @@
 #include "pulse.h"
 #include "effects.h"
 #include "input.h"
+#include "starfield.h"
 
 #define MODE_BLIT 0
 #define MODE_CYCLE 1
@@ -36,6 +37,7 @@ setup (void)
   pulse_init ();
   effects_init ();
   input_init ();
+  starfield_init ();
 
   MODE_SET (MODE_BLIT);
   INPUT_SET_INTEGER (-1);
@@ -108,6 +110,17 @@ loop (void)
             case XT_F4:
               MODE_SET (MODE_NUMBER);
               INPUT_CLEAR ();
+              break;
+
+            /* starfield */
+
+            case XT_F11:
+              STARFIELD_TOGGLE ();
+              STARFIELD_SETMODE (STARFIELD_MODE_PERSPECTIVE);
+              break;
+            case XT_F12:
+              STARFIELD_TOGGLE ();
+              STARFIELD_SETMODE (STARFIELD_MODE_SIDESCROLL);
               break;
 
             /* blitting */
@@ -321,4 +334,5 @@ loop (void)
   SCROLL_UPDATE ();
   CYCLE_UPDATE ();
   PULSE_UPDATE ();
+  STARFIELD_UPDATE ();
 }
